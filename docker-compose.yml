@@ -1,0 +1,37 @@
+version: "3.8"
+services:
+    app:
+        build:
+          context: ./
+          dockerfile: Dockerfile
+        container_name: ${APP_CONTAINER_NAME}
+        ports:
+            - $PORT:$PORT
+        volumes:
+            - ./app:/app
+        restart: always
+        command: tail -f /dev/null
+        env_file:
+            - .env
+        networks:
+        - app-network
+        
+    front:
+        build:
+          context: ./
+          dockerfile: front.Dockerfile
+        container_name: ${FRONT_CONTAINER_NAME}
+        ports:
+            - $FRONT_PORT:$FRONT_PORT
+        volumes:
+            - ./front:/front
+        restart: always
+        command: tail -f /dev/null
+        env_file:
+            - .env
+        networks:
+        - app-network
+
+networks:
+  app-network:
+    driver: bridge
